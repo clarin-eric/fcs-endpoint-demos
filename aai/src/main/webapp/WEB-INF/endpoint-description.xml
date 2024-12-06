@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EndpointDescription xmlns="http://clarin.eu/fcs/endpoint-description"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://clarin.eu/fcs/endpoint-description ../../resources/Endpoint-Description.xsd"
+    version="2">
+    <Capabilities>
+        <Capability>http://clarin.eu/fcs/capability/basic-search</Capability>
+        <Capability>http://clarin.eu/fcs/capability/authenticated-search</Capability>
+    </Capabilities>
+    <SupportedDataViews>
+        <SupportedDataView id="hits" delivery-policy="send-by-default">application/x-clarin-fcs-hits+xml</SupportedDataView>
+    </SupportedDataViews>
+    <Resources>
+        <Resource pid="aai-demo:public">
+            <Title xml:lang="en">Public Demo Resource</Title>
+            <Description xml:lang="en">A public resource</Description>
+            <LandingPageURI>https://ignore.me</LandingPageURI>
+            <Languages>
+                <Language>eng</Language>
+            </Languages>
+            <AvailableDataViews ref="hits" />
+        </Resource>
+        <Resource pid="aai-demo:private:authOnly">
+            <Title xml:lang="en">Private Demo Resource #1 - authOnly</Title>
+            <Description xml:lang="en">A resource requiring authOnly information</Description>
+            <LandingPageURI>https://ignore.me</LandingPageURI>
+            <Languages>
+                <Language>eng</Language>
+            </Languages>
+            <AvailabilityRestriction>authOnly</AvailabilityRestriction>
+            <AvailableDataViews ref="hits" />
+        </Resource>
+        <Resource pid="aai-demo:private:personalIdentifier">
+            <Title xml:lang="en">Private Demo Resource #2 - personalIdentifier</Title>
+            <Description xml:lang="en">A resource requiring personalIdentifier information</Description>
+            <LandingPageURI>https://ignore.me</LandingPageURI>
+            <Languages>
+                <Language>eng</Language>
+            </Languages>
+            <AvailabilityRestriction>personalIdentifier</AvailabilityRestriction>
+            <AvailableDataViews ref="hits" />
+            <Resources>
+                <Resource pid="aai-demo:private:personalIdentifier:authOnly">
+                    <Title xml:lang="en">Private Demo Resource #2.1 - authOnly</Title>
+                    <Description xml:lang="en">A resource requiring authOnly information, while parent requires personalIdentifier</Description>
+                    <LandingPageURI>https://ignore.me</LandingPageURI>
+                    <Languages>
+                        <Language>eng</Language>
+                    </Languages>
+                    <AvailabilityRestriction>authOnly</AvailabilityRestriction>
+                    <AvailableDataViews ref="hits" />
+                </Resource>
+                <Resource pid="aai-demo:private:personalIdentifier:personalIdentifier">
+                    <Title xml:lang="en">Private Demo Resource #2.2 - personalIdentifier</Title>
+                    <Description xml:lang="en">A resource requiring personalIdentifier information, same as parent</Description>
+                    <LandingPageURI>https://ignore.me</LandingPageURI>
+                    <Languages>
+                        <Language>eng</Language>
+                    </Languages>
+                    <AvailabilityRestriction>personalIdentifier</AvailabilityRestriction>
+                    <AvailableDataViews ref="hits" />
+                </Resource>
+            </Resources>
+        </Resource>
+    </Resources>
+</EndpointDescription>

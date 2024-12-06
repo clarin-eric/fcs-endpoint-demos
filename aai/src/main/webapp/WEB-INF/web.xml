@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+    id="TEXTPLUS_SAW_FCS" version="2.5">
+    <display-name>SRU/CQL FCS 2.0 Endpoint</display-name>
+    <description>SRU/CQL FCS 2.0 FCS Endpoint Service for SAW</description>
+
+    <!-- NOTE: great for static configurations but not for dynamic ones, see JNDI `jetty-env.xml` -->
+    <!--
+    <context-param>
+        <description>Default resource</description>
+        <param-name>DEFAULT_RESOURCE_PID</param-name>
+        <param-value>FIXME:DEFAULT_RESOURCE_PID</param-value>
+    </context-param>
+    -->
+
+    <servlet>
+        <display-name>SAW SRU/CQL Service (HTTP Interface)</display-name>
+        <servlet-name>SRU/CQL</servlet-name>
+
+        <!-- using the CLARIN FCS framework with our search engine class -->
+        <servlet-class>eu.clarin.sru.server.utils.SRUServerServlet</servlet-class>
+        <init-param>
+            <param-name>eu.clarin.sru.server.utils.sruServerSearchEngineClass</param-name>
+            <param-value>eu.clarin.sru.fcs.demo.aai_endpoint.AAIEndpointSearchEngine</param-value>
+        </init-param>
+
+        <!-- some SRU settings -->
+        <!-- for a full list, see: eu.clarin.sru.server.SRUServerConfig -->
+        <init-param>
+            <param-name>eu.clarin.sru.server.numberOfRecords</param-name>
+            <param-value>250</param-value>
+        </init-param>
+        <init-param>
+            <param-name>eu.clarin.sru.server.maximumRecords</param-name>
+            <param-value>1000</param-value>
+        </init-param>
+        <init-param>
+            <param-name>eu.clarin.sru.server.allowOverrideMaximumRecords</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>eu.clarin.sru.server.allowOverrideIndentResponse</param-name>
+            <param-value>true</param-value>
+        </init-param>
+
+        <!-- To enable SRU 2.0 for FCS 2.0 -->
+        <init-param>
+            <param-name>eu.clarin.sru.server.sruSupportedVersionMax</param-name>
+            <param-value>2.0</param-value>
+        </init-param>
+        <init-param>
+            <param-name>eu.clarin.sru.server.legacyNamespaceMode</param-name>
+            <param-value>loc</param-value>
+        </init-param>
+
+        <!-- mandatory SRU information -->
+        <init-param>
+            <param-name>eu.clarin.sru.server.database</param-name>
+            <param-value>dummy</param-value>
+        </init-param>
+
+        <!-- AAI -->
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.enable</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <!-- our identity at the FCS SRU Aggregator, should match the URI provided
+        to the Centre Registry/FCS SRU Aggregator as this value is set in the JWT
+        audience claim and check against -->
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.audience</param-name>
+            <param-value>http://127.0.0.1:8080/</param-value>
+        </init-param>
+        <!-- JWT claims verification -->
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.ignoreIssuedAt</param-name>
+            <param-value>false</param-value>
+        </init-param>
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.acceptIssuedAt</param-name>
+            <param-value>5</param-value>
+        </init-param>
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.acceptExpiresAt</param-name>
+            <param-value>5</param-value>
+        </init-param>
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.acceptNotBefore</param-name>
+            <param-value>5</param-value>
+        </init-param>
+        <!-- key bundled in app, can also be a local file system path -->
+        <!--
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.key.demo-aggregator</param-name>
+            <param-value>resource:/WEB-INF/demo-aggregator.pem</param-value>
+        </init-param>
+        -->
+        <!-- key hosted using JWKS at some endpoint, should only contain a single key! -->
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.jwks.demo-aggregator</param-name>
+            <param-value>http://127.0.0.1:4019</param-value> <!-- if with local test aggregator -->
+        </init-param>
+        <!-- associate an JWT issuer (iss) check to the key, optional -->
+        <!--
+        <init-param>
+            <param-name>eu.clarin.sru.server.fcs.authentication.issuer.demo-aggregator</param-name>
+            <param-value>https://contentsearch.clarin.eu/</param-value>
+        </init-param>
+        -->
+
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>SRU/CQL</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+</web-app>
